@@ -27,23 +27,31 @@ How can we best achieve this? Setting up the channels each time from scratch wou
 
 Also, we’ll need to see which browser are capable of doing this and on which platforms. Maybe we can invent something that uses the audio capture from WebRTC in the browser, but then uses something like websockets to the server and we can still do the switching overthere? 
 
-## Setup of project
+## Creating a project from scratch
 
-- Preparation:
+### Creating project stub and client-side project in Angular:
 
 ```bash 
 git clone https://github.com/dedalusmax/live-auction.git
 npm install @angular/cli -g
 ng new live-auction --minimal --routing --style scss -v 
+npm install ng-socket-io --save
 cd live-auction
 ng serve
 ```
 
 - open .angular-cli.json and change *inlineStyle* and *inlineTemplate* for *component* in **false**
+
+## Creating socket.io server-side project:
+
+> https://github.com/bougarfaoui/ng-socket-io
+> https://github.com/bougarfaoui/ng-socket-io/tree/master/examples/chat-app
+
+- open another terminal window 
 - create *server* folder
 - add **app.js**
 - add .gitignore
-- add package.json:
+- add **package.json**:
 
 ```json
 {
