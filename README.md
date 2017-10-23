@@ -1,5 +1,5 @@
 # Live Auction
-An WebRTC Proof-of-concept project in Angular 4 CLI
+A WebRTC Proof-of-concept project developed in Angular 4 CLI, using Node.js and socket.io as a signalling server.
 
 ## The Concept
 
@@ -37,5 +37,36 @@ npm install @angular/cli -g
 ng new live-auction --minimal --routing --style scss -v 
 cd live-auction
 ng serve
+```
+
+- open .angular-cli.json and change *inlineStyle* and *inlineTemplate* for *component* in **false**
+- create *server* folder
+- add **app.js**
+- add .gitignore
+- add package.json:
+
+```json
+{
+    "name": "live-auction-socket-io",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+      "start": "node ./bin/www"
+    },
+    "dependencies": {
+      "body-parser": "~1.15.1",
+      "cookie-parser": "~1.4.3",
+      "debug": "~2.2.0",
+      "express": "~4.13.4",
+      "jade": "~1.11.0",
+      "morgan": "~1.7.0",
+      "serve-favicon": "~2.3.0",
+      "socket.io": "^1.7.3"
+    }
+  }
+```
+
+```bash
+npm install
 ```
 
