@@ -1,5 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
 import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -16,6 +18,7 @@ const config: SocketIoConfig = { url: 'http://localhost:8988', options: {} };
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     AppRoutingModule,
     SocketIoModule.forRoot(config),
     AuctionModule 

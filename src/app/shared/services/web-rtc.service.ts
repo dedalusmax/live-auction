@@ -26,11 +26,12 @@ export class WebRtcService {
   }
 
   stopLocalStream(): Promise<null> {
-    return new Promise<null>((body) => {
+    return new Promise<null>((resolve, reject) => {
       if (this.localStream) {
         for (let track of this.localStream.getTracks()) {
           track.stop();
           console.log('Stopped streaming ' + track.kind + ' track from getUserMedia.');
+          resolve();
         }
       }
     });

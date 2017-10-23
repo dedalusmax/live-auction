@@ -10,6 +10,10 @@ import { WebRtcService } from '../../shared/services/web-rtc.service';
 export class DashboardComponent implements OnInit {
 
   private msg: string; 
+  private streaming: boolean;
+
+  private selectedUser;
+  private users = [];
 
   constructor(private signalling: SignallingService, private webRtc: WebRtcService) { }
 
@@ -17,6 +21,18 @@ export class DashboardComponent implements OnInit {
     this.signalling.getMessage().subscribe(msg => {
       this.msg = "1st " + msg;
     });
+
+    this.signalling.getUsers().subscribe(users => {
+      this.users = users;
+    });
+
+    this.signalling.userConnected().subscribe(userId => {
+      this.users.find(u => u.id === userId).connected = true;
+    });
+
+    this.signalling.userDisconnected().subscribe(userId => {
+      this.users.find(u => u.id === userId).connected = false;
+    });   
   }
 
   sendMsg(msg) {
@@ -28,6 +44,9 @@ export class DashboardComponent implements OnInit {
       let videoElement: HTMLVideoElement;
       videoElement = document.querySelector('#localVideo') as HTMLVideoElement;
       videoElement.srcObject = stream;
+
+      this.streaming = true;
+      this.signalling.connectUser(this.selectedUser.id);
     });
   }
 
@@ -36,6 +55,9 @@ export class DashboardComponent implements OnInit {
       let videoElement: HTMLVideoElement;
       videoElement = document.querySelector('#localVideo') as HTMLVideoElement;
       videoElement.srcObject = null;
+
+      this.streaming = false;     
+      this.signalling.disconnectUser(this.selectedUser.id);     
     });
   };
 }

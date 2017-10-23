@@ -1,3 +1,19 @@
+<form #detailsForm="ngForm">
+  <span>connect as:</span>
+
+  <select name="user" [(ngModel)]="selectedUser" required>
+    <option></option>
+    <option *ngFor="let user of users" [ngValue]="user">{{user.name}}</option>
+  </select>
+
+  <button type="submit" class="btn btn-primary" (click)="start();" [disabled]="!detailsForm.form.valid || streaming">Connect</button>
+  <button type="button" class="btn btn-default" (click)="stop();" [disabled]="!streaming">Disconnect</button> 
+</form>
+<div>
+    <span>My local video:</span>
+    <video id="localVideo" autoplay></video> 
+</div>
+
 <div>
   <input type="text" #msgInput name="" value="">
   <button (click)="sendMsg(msgInput.value)">Send</button>
@@ -6,16 +22,8 @@
 </div>
 
 <div>
-  <button (click)="start();">START</button>
-  <button (click)="stop();">STOP</button> 
-  <span>My local video</span>
-  <video id="localVideo" autoplay></video>
-</div>
-
-<div>
-  <p>Buyer 1</p>
-  <p>Buyer 2</p>
-  <p>Buyer 3</p>
-  <p>Buyer 4</p>
-  <p>Buyer 5</p>
+  <span>Connect with:</span>
+  <div *ngFor="let user of users">
+      <button type="button" class="btn btn-primary" (click)="connectTo(user.id);" [disabled]="!user.connected">{{user.name}}</button>     
+  </div>
 </div>
