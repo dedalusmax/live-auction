@@ -129,16 +129,14 @@ implement signalling service:
 - implement incoming and outgoing messages:
 
 ```typescript
-    getMessage() {
-        return this.socket
-            .fromEvent<any>("msg")
-            .map(data => data.msg);
-    }
+  getMessage() {
+    return this.socket.fromEvent<any>("msg")
+      .map(data => data.msg);
+  }
 
-    sendMessage(msg: string) {
-        this.socket
-            .emit("msg", msg);
-    }
+  sendMessage(msg: string) {
+    this.socket.emit("msg", msg);
+  }
 ```
 
 implement chat in **app.component.ts** for testing the signalling mechanism:
@@ -176,4 +174,27 @@ implement chat in **app.component.ts** for testing the signalling mechanism:
 
 - browse to http://localhost:4200/ 
 - test the app
+
+## Sorting out the project structure
+
+```bash
+ng g module auction --routing -m app
+ng g component auction/dashboard
+```
+
+- in **app-routing.module.ts**:
+
+{ path: '', redirectTo: '/auction', pathMatch: 'full' }
+
+- in **auction-routing.module.ts**:
+
+{ path: 'auction', component: DashboardComponent }
+
+- copy the HTML from app.component.ts into **dashboard.component.html**
+- remove all code from app.component.ts and copy it to the **dashboard.component.ts**
+- remove provider from app.component.ts and put it in the **auction.module.ts**
+- test it!
+
+## Creating WebRTC connection on the client
+
 
