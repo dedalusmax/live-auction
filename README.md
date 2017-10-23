@@ -41,15 +41,42 @@ ng serve
 ```
 
 - open .angular-cli.json and change *inlineStyle* and *inlineTemplate* for *component* in **false**
+- clean the **app.component.ts** of HTML content except for router-outlet
 
 ## Creating socket.io server-side project:
 
 > https://github.com/bougarfaoui/ng-socket-io
+
 > https://github.com/bougarfaoui/ng-socket-io/tree/master/examples/chat-app
 
 - open another terminal window 
 - create *server* folder
-- add **app.js**
+- add **app.js**:
+
+```javascript
+var http = require('http');
+var path = require('path');
+var express = require('express');
+var app = express();
+
+app.use(express.static(path.join(__dirname, '../src/dist')));
+
+app.get('*', function(req, res, next) {
+  res.sendFile(__dirname+"../src/dist/index.html");
+});
+
+var server = http.createServer(app);
+var io = require('socket.io')(server);
+io.on('connection', function (socket) {
+    socket.emit('msg', { msg: 'Welcome bro!' });
+    socket.on('msg',function(msg){
+    	socket.emit('msg', { msg: "you sent : "+msg });
+    })
+});
+
+server.listen(8988);
+```
+
 - add .gitignore
 - add **package.json**:
 
@@ -77,4 +104,76 @@ ng serve
 ```bash
 npm install
 ```
+
+### Connect with the socket.io on the client
+
+in the **app.module.ts**:
+
+- import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
+- const config: SocketIoConfig = { url: 'http://localhost:8988', options: {} };
+- SocketIoModule.forRoot(config) 
+
+- open new terminal window
+- create **signalling.service.ts**: 
+
+```bash
+ng g service shared/services/signalling -m app
+```
+
+implement signalling service:
+
+- import { Observable } from 'rxjs/Observable'
+- import 'rxjs/add/operator/map'; 
+- import { Socket } from 'ng-socket-io';
+- constructor(private socket: Socket) {}
+- implement incoming and outgoing messages:
+
+```typescript
+    getMessage() {
+        return this.socket
+            .fromEvent<any>("msg")
+            .map(data => data.msg);
+    }
+
+    sendMessage(msg: string) {
+        this.socket
+            .emit("msg", msg);
+    }
+```
+
+implement chat in **app.component.ts** for testing the signalling mechanism:
+
+- add the following template:
+
+```html
+<div>
+    <input type="text" #msgInput name="" value="">
+    <button (click)="sendMsg(msgInput.value)">Send</button>
+    <br>
+    <p>{{msg}}  </p>
+</div>
+```
+
+- import { SignallingService } from './shared/services/signalling.service';
+- providers: [SignallingService]
+- fill out the class with the following code:
+
+```typescript
+  private msg: string;
+
+  constructor(private signalling: SignallingService) { }
+
+  ngOnInit() {
+    this.signalling.getMessage().subscribe(msg => {
+      this.msg = "1st " + msg;
+    });
+  }
+
+  sendMsg(msg) {
+    this.signalling.sendMessage(msg);
+  }
+```
+
+- browse to http://localhost:4200/ 
+- test the app
 
