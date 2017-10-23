@@ -197,4 +197,67 @@ ng g component auction/dashboard
 
 ## Creating WebRTC connection on the client
 
+https://github.com/webrtc/adapter
+https://stackoverflow.com/questions/38200262/how-to-keep-webrtc-adapter-js-updated-in-a-project-using-npm
 
+```bash
+ng g service shared/services/web-rtc -m app
+npm install webrtc-adapter --save
+in scripts: "../node_modules/webrtc-adapter/out/adapter.js"
+ng serve
+```
+
+- implement **web-rtc.service.ts**:
+
+```typescript
+private localStream: MediaStream;
+
+  startLocalStream(audio: boolean, video: boolean): Promise<MediaStream> {
+
+      let constraints: MediaStreamConstraints = {};
+      constraints.audio = audio;
+      constraints.video = video;
+
+      let promise = navigator.mediaDevices.getUserMedia(constraints);
+      
+      promise.then((stream) => {
+        console.log('Started streaming from getUserMedia.');
+        this.localStream = stream;
+      }, (error) => {
+        console.log('Streaming error: ' + error);
+      });
+
+      return promise;
+  }
+
+  stopLocalStream(): Promise<null> {
+    return new Promise<null>((body) => {
+      if (this.localStream) {
+        for (let track of this.localStream.getTracks()) {
+          track.stop();
+          console.log('Stopped streaming ' + track.kind + ' track from getUserMedia.');
+        }
+      }
+    });
+  }
+```
+
+- use the web-rtc.service inside the **dashboard.component.ts**:
+
+```typescript
+  start() {
+    this.webRtc.startLocalStream(false, true).then((stream) => {
+      let videoElement: HTMLVideoElement;
+      videoElement = document.querySelector('#localVideo') as HTMLVideoElement;
+      videoElement.srcObject = stream;
+    });
+  }
+
+  stop() {
+    this.webRtc.stopLocalStream().then(() => {
+      let videoElement: HTMLVideoElement;
+      videoElement = document.querySelector('#localVideo') as HTMLVideoElement;
+      videoElement.srcObject = null;
+    });
+  };
+```
