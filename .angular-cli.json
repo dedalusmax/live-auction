@@ -57,8 +57,8 @@
     "styleExt": "scss",
     "component": {
       "spec": false,
-      "inlineStyle": true,
-      "inlineTemplate": true
+      "inlineStyle": false,
+      "inlineTemplate": false
     },
     "directive": {
       "spec": false
