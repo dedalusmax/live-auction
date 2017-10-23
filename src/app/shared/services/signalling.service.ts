@@ -9,13 +9,15 @@ export class SignallingService {
   constructor(private socket: Socket) { }
 
   getMessage() {
-    return this.socket
-      .fromEvent<any>("msg")
+    return this.socket.fromEvent<any>("msg")
       .map(data => data.msg);
   }
 
   sendMessage(msg: string) {
-    this.socket
-      .emit("msg", msg);
+    this.socket.emit("msg", msg);
+  }
+
+  close() {
+    this.socket.disconnect();
   }
 }

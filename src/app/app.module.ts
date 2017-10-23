@@ -5,6 +5,7 @@ import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SignallingService } from './shared/services/signalling.service';
+import { AuctionModule } from './auction/auction.module';
 
 const config: SocketIoConfig = { url: 'http://localhost:8988', options: {} };
 
@@ -15,7 +16,8 @@ const config: SocketIoConfig = { url: 'http://localhost:8988', options: {} };
   imports: [
     BrowserModule,
     AppRoutingModule,
-    SocketIoModule.forRoot(config) 
+    SocketIoModule.forRoot(config),
+    AuctionModule 
   ],
   providers: [SignallingService],
   bootstrap: [AppComponent]
