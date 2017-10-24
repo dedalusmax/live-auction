@@ -23,17 +23,22 @@ export class SignallingService {
   connectUser(userId: number) {
     this.socket.emit('connectUser', userId);
   }
-
-  disconnectUser(userId: number) {
-    this.socket.emit('disconnectUser', userId);
-  }
-
   userConnected() {
     return this.socket.fromEvent<any>('userConnected');
   }
 
+  disconnectUser(userId: number) {
+    this.socket.emit('disconnectUser', userId);
+  }
   userDisconnected() {
     return this.socket.fromEvent<any>('userDisconnected');
+  }
+
+  requestForJoin(userId: number, userIdToConnect: number) {
+    this.socket.emit('requestForJoin', { userId: userId, userIdToConnect: userIdToConnect });
+  }
+  joinRequested() {
+    return this.socket.fromEvent<any>('joinRequested');
   }
 
   close() {
