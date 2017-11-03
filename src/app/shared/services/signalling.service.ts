@@ -41,6 +41,13 @@ export class SignallingService {
     return this.socket.fromEvent<any>('joinRequested');
   }
 
+  sendRtcMessage(userId: number, userIdToConnect: number, message: any) {
+    this.socket.emit('sendRtcMessage', { userId: userId, userIdToConnect: userIdToConnect, message: message });   
+  }
+  rtcMessageReceived() {
+    return this.socket.fromEvent<any>('rtcMessageReceived');
+  }
+
   close() {
     this.socket.disconnect();
   }

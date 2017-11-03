@@ -33,10 +33,6 @@ export class DashboardComponent implements OnInit {
     this.signalling.userDisconnected().subscribe(userId => {
       this.users.find(u => u.id === userId).connected = false;
     });   
-
-    this.signalling.joinRequested().subscribe(userId => {
-      console.log('joinRequested from user ' + userId);
-    }); 
   }
 
   sendMsg(msg) {

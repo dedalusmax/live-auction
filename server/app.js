@@ -59,6 +59,11 @@ io.on('connection', function (socket) {
 
   socket.on('requestForJoin', function (data) {
     console.log('requestForJoin received: ' + data);
+    socket.broadcast.to('room' + data.userIdToConnect).emit('joinRequested', data);
+  });
+
+  socket.on('requestForJoin', function (data) {
+    console.log('requestForJoin received: ' + data);
     socket.broadcast.to('room' + data.userIdToConnect).emit('joinRequested', data.userId);
   });
 });
